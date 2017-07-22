@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BitBot</title>
+</head>
+
+<body>
+<h1>BitBot</h1>
+<form>
+valuta:<br>
+	<select name="valutaIzbirnik" >
+		<span id="valute">
+			<option value="USDT_ETH" selected>USDT_ETH</option>
+			<option value="valutaN">valutaN</option>
+		</span>
+	</select>
+<br>
+padec:<br>
+	<input type="text" name="prodajniP" value="0.5" size=4 />%
+<br>
+rast:<br>
+	<input type="text" name="nabavniP" value="2.0" size=4 />%
+<br>
+tikerji:<br>
+	<input type="text" name="nabavniP" value="10" size=4 />
+<br>
+	<input type="button" name="ok" value="Zaženi"  />
+	<input type="button" name="ok" value="Ustavi"  />
+	
+</form>
+
+<p>max <span id="high"></span>.</p>
+
+<iframe src="https://poloniex.com/public?command=returnTradeHistory&currencyPair=BTC_NXT&start=1410158341&end=1410499372
+"></iframe>
+
+<p>min <span id="low"></span>.</p>
+
+
+</body>
+
+<script>
+/*
+document.getElementById("valute").innerHTML = listValute();
+function listValute(){
+	var htmOpt = ["<option value=",valutaN,</option>"];
+	return concat(htmOpt[]);
+}
+*/
+
+var points = [0.0002656 , 0.0002675 , 0.0001];
+
+document.getElementById("high").innerHTML = maxBid(points);
+function maxBid(arr) {
+    return Math.max.apply(null, arr);
+}
+
+document.getElementById("low").innerHTML = minAsk(points);
+function minAsk(arr) {
+    return Math.min.apply(null, arr);
+}
+
+</script>
+</html>
