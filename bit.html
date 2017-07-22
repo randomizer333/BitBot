@@ -1,60 +1,124 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>BitBot</title>
+	<meta charset="utf-8">
+	<title>BitBot</title>
 </head>
-
+<style></style>
 <body>
-<h1>BitBot</h1>
+<h1>BitTradeBot</h1>
 <form>
-valuta:<br>
-	<select name="valutaIzbirnik" >
-		<span id="valute">
-			<option value="USDT_ETH" selected>USDT_ETH</option>
-			<option value="valutaN">valutaN</option>
+trg:
+<br>
+	<select name="trgIzbirnik" >
+		<span id="trg">
+			<option value="BTC" selected>BTC</option>
+			<option value="ETH" selected>ETH</option>
+			<option value="XMR" selected>XMR</option>
+			<option value="USDT" selected>USDT</option>
 		</span>
 	</select>
 <br>
-padec:<br>
-	<input type="text" name="prodajniP" value="0.5" size=4 />%
+padec:
 <br>
-rast:<br>
-	<input type="text" name="nabavniP" value="2.0" size=4 />%
+	<input type="text" name="prodajniP" value="0.5" size=4 >%
 <br>
-tikerji:<br>
-	<input type="text" name="nabavniP" value="10" size=4 />
+rast:
 <br>
-	<input type="button" name="ok" value="Zaženi"  />
-	<input type="button" name="ok" value="Ustavi"  />
-	
+	<input type="text" name="nabavniP" value="2.0" size=4 >%
+<br>
+tikerji:
+<br>
+	<input type="text" name="tiker" value="10" size=4 >
+<br>
+	<button id="start" onclick="start()">Zaženi</button>
+	<button id="stop" onclick="stop()">Ustavi</button>
 </form>
 
-<p>max <span id="high"></span>.</p>
+<p>zadnji max v <span id="tikerN"></span>ih tikerjih:<br> <span id="high"></span></p>
 
-<iframe src="https://poloniex.com/public?command=returnTradeHistory&currencyPair=BTC_NXT&start=1410158341&end=1410499372
-"></iframe>
+<p>zadnji min v <span id="tikerN"></span>ih tikerjih:<br> <span id="low"></span></p>
 
-<p>min <span id="low"></span>.</p>
+<p>stanje: <span id="stanje"></span><span id="low"></span></p>
 
-
+https://poloniex.com/public?command=returnTradeHistory&currencyPair=USDT_BTC 
 </body>
-
 <script>
+/* autobahn
+var autobahn = require('autobahn');		//begining of API, node.js
+var wsuri = "wss://api.poloniex.com";
+var connection = new autobahn.Connection({
+  url: wsuri,
+  realm: "realm1"
+});
+
+connection.onopen = function (session) {
+	function marketEvent (args,kwargs) {
+		console.log(args);
+	}
+	function tickerEvent (args,kwargs) {
+		console.log(args);
+	}
+	function trollboxEvent (args,kwargs) {
+		console.log(args);
+	}
+	session.subscribe('BTC_XMR', marketEvent);
+	session.subscribe('ticker', tickerEvent);
+	session.subscribe('trollbox', trollboxEvent);
+}
+
+connection.onclose = function () {
+  console.log("Websocket connection closed");
+}
+		       
+connection.open();		//end of API  	
+*/
+/* funkcije
+pridobi zadnje trgovanje na izbranem trgu;
+izlušči zadnje cene shrani jih v arej;
+določi max/min;
+
+preveri valute;
+izberi največjo;
+sproži akcijo kupi/prodaj;
+briši naročila;
+
+*/
 /*
+//pridobi pare valut z apijem in jih naštej v spustni meni
 document.getElementById("valute").innerHTML = listValute();
 function listValute(){
 	var htmOpt = ["<option value=",valutaN,</option>"];
 	return concat(htmOpt[]);
 }
+
+*/
+function start(){
+	document.getElementById("stanje").innerHTML = "Teče";
+}
+/*
+function stop(){
+	document.getElementById("sta").innerHTML = "Ustavljeno";
+}
+*/
+/*
+function tikerGrab(){
+	var tiker = document.getElementsByName("tikerN").value;// Find an element and assign value to var;
+}
+
+document.getElementById("tikerN").innerHTML = tiker; // Display x in the element
+
 */
 
-var points = [0.0002656 , 0.0002675 , 0.0001];
+var points = [0.0002656 , 0.00026884444 , 0.0001];
 
-document.getElementById("high").innerHTML = maxBid(points);
-function maxBid(arr) {
+//izberi in podaj maksimalno vrednost iz areja
+document.getElementById("high").innerHTML = maxAsk(points);
+function maxAsk(arr) {
     return Math.max.apply(null, arr);
 }
 
+//izberi in podaj minimalno vrednost iz areja
 document.getElementById("low").innerHTML = minAsk(points);
 function minAsk(arr) {
     return Math.min.apply(null, arr);
